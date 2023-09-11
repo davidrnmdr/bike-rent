@@ -64,4 +64,24 @@ export class App {
   findUser(email: string): User | undefined {
     return this.users.find((user) => user.email === email);
   }
+
+  //listBikes
+  listBikes(): Bike[] {
+    return this.bikes;
+  }
+
+  //listUsers
+  listUsers(): User[] {
+    return this.users;
+  }
+
+  //listRents
+  listRents(): Rent[] {
+    return this.rents;
+  }
+
+  //authUser
+  authUser(password: string): User | undefined {
+    return this.users.find((user) => user.password === password);
+  }
 }
