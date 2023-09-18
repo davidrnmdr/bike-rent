@@ -1,5 +1,5 @@
 {
-  "name": "bike",
+  "name": "banco",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.5.7",
+    "@types/bcrypt": "^5.0.0",
+    "@types/sinon": "^10.0.16",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "sinon": "^15.2.0"
   }
 }
