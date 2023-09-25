@@ -1,7 +1,7 @@
 export class UnavailableBikeError extends Error {
-    public readonly name = 'UnavailableBikeError'
+  public readonly name = "UnavailableBikeError";
 
-    constructor() {
-        super('Unavailable bike.')
-    }
+  constructor() {
+    super("Unavailable bike.");
+  }
 }
