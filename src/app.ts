@@ -9,6 +9,7 @@ import { UnavailableBikeError } from "./errors/unavailable-bike-error";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { DuplicateUserError } from "./errors/duplicate-user-error";
 import { WrongCredentialError } from "./errors/wrong-credential-error";
+import { BikeAlreadyRegisteredError } from "./errors/bike-already-registered-error";
 
 export class App {
   users: User[] = [];
@@ -42,10 +43,15 @@ export class App {
   }
 
   registerBike(bike: Bike): string {
-    const newId = crypto.randomUUID();
-    bike.id = newId;
-    this.bikes.push(bike);
-    return newId;
+    try {
+      this.findBike(bike.id);
+    } catch {
+      const newId = crypto.randomUUID();
+      bike.id = newId;
+      this.bikes.push(bike);
+      return newId;
+    }
+    throw new BikeAlreadyRegisteredError();
   }
 
   removeUser(email: string): void {

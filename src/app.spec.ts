@@ -8,6 +8,7 @@ import { UnavailableBikeError } from "./errors/unavailable-bike-error";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { DuplicateUserError } from "./errors/duplicate-user-error";
 import { WrongCredentialError } from "./errors/wrong-credential-error";
+import { BikeAlreadyRegisteredError } from "./errors/bike-already-registered-error";
 
 describe("App", () => {
   it("should correctly calculate the rent amount", async () => {
@@ -143,5 +144,31 @@ describe("App", () => {
     const user = new User("david", "david@null.com", "123");
     await app.registerUser(user);
     expect(await app.authenticate("david@null.com", "12")).toBeFalsy();
+  });
+
+  it("should return a truthy value when providing the correct credentials", async () => {
+    const app = new App();
+    const user = new User("david", "david@null.com", "123");
+    await app.registerUser(user);
+    expect(await app.authenticate("david@null.com", "123")).toBeTruthy();
+  });
+
+  //register bike
+  it("should throw bike already registered when trying to register an already registered bike", () => {
+    const app = new App();
+    const bike = new Bike(
+      "caloi mountainbike",
+      "mountain bike",
+      1234,
+      1234,
+      100.0,
+      "My bike",
+      5,
+      []
+    );
+    app.registerBike(bike);
+    expect(() => {
+      app.registerBike(bike);
+    }).toThrow(BikeAlreadyRegisteredError);
   });
 });
