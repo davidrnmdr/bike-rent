@@ -171,4 +171,29 @@ describe("App", () => {
       app.registerBike(bike);
     }).toThrow(BikeAlreadyRegisteredError);
   });
+
+  it("should proberly register the bike, i.e, the bikes array must include the bike with the correct properties", () => {
+    const app = new App();
+    const bike = new Bike(
+      "caloi mountainbike",
+      "mountain bike",
+      1234,
+      1234,
+      100.0,
+      "My bike",
+      5,
+      []
+    );
+    app.registerBike(bike);
+    expect(app.bikes.includes(bike) && app.bikes[0].available).toBeTruthy();
+    expect(app.bikes[0].id).toEqual(bike.id);
+  });
+
+  //removeUser
+  it("should throw user not found when trying to remove an unregistered user", async () => {
+    const app = new App();
+    const user = new User("david", "david@null.com", "123");
+    app.registerUser(user);
+    expect(app.removeUser("aaron@null.com")).toThrow(UserNotFoundError);
+  });
 });

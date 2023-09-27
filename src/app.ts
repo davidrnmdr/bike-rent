@@ -55,12 +55,10 @@ export class App {
   }
 
   removeUser(email: string): void {
-    const userIndex = this.users.findIndex((user) => user.email === email);
-    if (userIndex !== -1) {
-      this.users.splice(userIndex, 1);
-      return;
-    }
-    throw new Error("User does not exist.");
+    const user = this.findUser(email);
+    const userIndex = this.users.indexOf(user);
+    this.users.splice(userIndex, 1);
+    return;
   }
 
   rentBike(bikeId: string, userEmail: string): void {
