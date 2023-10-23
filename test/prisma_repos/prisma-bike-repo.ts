@@ -15,6 +15,7 @@ export class PrismaBikeRepo implements BikeRepo {
       locationData.longitude
     );
 
+    console.log(bikeData.id);
     return new Bike(
       bikeData.name,
       bikeData.type,
@@ -32,80 +33,100 @@ export class PrismaBikeRepo implements BikeRepo {
 
   async add(bike: Bike): Promise<string> {
     const newId = crypto.randomUUID();
-    (async function () {
-      prisma.bike.create({
+    let location = await prisma.location.findUnique({
+      where: {
+        latitude_longitude: {
+          latitude: bike.location.latitude,
+          longitude: bike.location.longitude,
+        },
+      },
+    });
+
+    if (!location) {
+      location = await prisma.location.create({
         data: {
-          id: newId,
-          name: bike.name,
-          type: bike.type,
-          bodySize: bike.bodySize,
-          maxLoad: bike.maxLoad,
-          rate: bike.rate,
-          description: bike.description,
-          ratings: bike.ratings,
-          imageUrls: {
-            create: {
-              img0: bike.imageUrls[0],
-              img1: bike.imageUrls[1],
-              img2: bike.imageUrls[2],
-            },
-          },
-          available: true,
-          location: {
-            create: {
-              latitude: bike.location.latitude,
-              longitude: bike.location.longitude,
-            },
-          },
-          rents: {
-            create: [],
-          },
+          latitude: bike.location.latitude,
+          longitude: bike.location.longitude,
         },
       });
-    })();
+    }
+
+    await prisma.bike.create({
+      data: {
+        id: newId,
+        name: bike.name,
+        type: bike.type,
+        bodySize: bike.bodySize,
+        maxLoad: bike.maxLoad,
+        rate: bike.rate,
+        description: bike.description,
+        ratings: bike.ratings,
+        imageUrls: {
+          create: {
+            img0: bike.imageUrls[0],
+            img1: bike.imageUrls[1],
+            img2: bike.imageUrls[2],
+          },
+        },
+        available: true,
+        location: {
+          connect: {
+            id: location.id,
+          },
+        },
+        rents: {
+          create: [],
+        },
+      },
+    });
     return newId;
   }
 
   async update(id: string, bike: Bike): Promise<void> {
-    (async function () {
-      await prisma.bike.update({
-        where: { id: id },
+    let location = await prisma.location.findUnique({
+      where: {
+        latitude_longitude: {
+          latitude: bike.location.latitude,
+          longitude: bike.location.longitude,
+        },
+      },
+    });
+    if (!location) {
+      location = await prisma.location.create({
         data: {
-          id: bike.id,
-          name: bike.name,
-          type: bike.type,
-          bodySize: bike.bodySize,
-          maxLoad: bike.maxLoad,
-          rate: bike.rate,
-          description: bike.description,
-          ratings: bike.ratings,
-          imageUrls: {
-            create: {
-              img0: bike.imageUrls[0],
-              img1: bike.imageUrls[1],
-              img2: bike.imageUrls[2],
-            },
-          },
-          available: true,
-          location: {
-            create: {
-              latitude: bike.location.latitude,
-              longitude: bike.location.longitude,
-            },
-          },
+          latitude: bike.location.latitude,
+          longitude: bike.location.longitude,
         },
       });
-    })();
+    }
+    await prisma.bike.update({
+      where: { id: id },
+      data: {
+        id: bike.id,
+        name: bike.name,
+        type: bike.type,
+        bodySize: bike.bodySize,
+        maxLoad: bike.maxLoad,
+        rate: bike.rate,
+        description: bike.description,
+        ratings: bike.ratings,
+        available: true,
+        location: {
+          connect: {
+            id: location.id,
+          },
+        },
+      },
+    });
   }
 
   async remove(id: string): Promise<void> {
-    (async function () {
-      prisma.bike.delete({
-        where: {
-          id: id,
-        },
-      });
-    })();
+    await prisma.imgUrls.delete({ where: { bikeId: id } });
+    await prisma.bike.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 
   async list(): Promise<Bike[]> {

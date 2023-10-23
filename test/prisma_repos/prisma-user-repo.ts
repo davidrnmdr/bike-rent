@@ -13,32 +13,30 @@ export class PrismaUserRepo implements UserRepo {
 
   async add(user: User): Promise<string> {
     const newId = crypto.randomUUID();
-    (async function () {
-      await prisma.user.create({
-        data: {
-          email: user.email,
-          name: user.name,
-          password: user.password,
-          id: newId,
-        },
-      });
-    })();
+
+    await prisma.user.create({
+      data: {
+        email: user.email,
+        name: user.name,
+        password: user.password,
+        id: newId,
+      },
+    });
+
     return newId;
   }
 
   async remove(email: string): Promise<void> {
-    (async function () {
-      await prisma.user.delete({
-        where: {
-          email: email,
-        },
-      });
-    })();
+    await prisma.user.delete({
+      where: {
+        email: email,
+      },
+    });
   }
 
   async list(): Promise<User[]> {
     const userList = await prisma.user.findMany();
-    let users;
+    let users = [];
 
     for (const [i, user] of userList.entries()) {
       users[i] = new User(user.name, user.email, user.password, user.id);

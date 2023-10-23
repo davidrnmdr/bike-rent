@@ -47,7 +47,7 @@ export class App {
 
   async removeUser(email: string): Promise<void> {
     await this.findUser(email);
-    if (await this.rentRepo.findOpenByUser(email)) {
+    if ((await this.rentRepo.findOpenByUser(email))?.length > 0) {
       throw new UserWithOpenRentError();
     }
     await this.userRepo.remove(email);

@@ -14,19 +14,25 @@ import { UserRepo } from "../src/ports/user-repo";
 import { BikeRepo } from "../src/ports/bike-repo";
 import { RentRepo } from "../src/ports/rent-repo";
 import { UserWithOpenRentError } from "../src/errors/user-with-open-rent-error";
+import { PrismaUserRepo } from "./prisma_repos/prisma-user-repo";
+import { PrismaBikeRepo } from "./prisma_repos/prisma-bike-repo";
+import { PrismaRentRepo } from "./prisma_repos/prisma-rent-repo";
 
 let userRepo: UserRepo;
 let bikeRepo: BikeRepo;
 let rentRepo: RentRepo;
 
 describe("App", () => {
-  beforeEach(() => {
-    userRepo = new FakeUserRepo();
-    bikeRepo = new FakeBikeRepo();
-    rentRepo = new FakeRentRepo();
-  });
+  // beforeEach(() => {
+  //   userRepo = new FakeUserRepo();
+  //   bikeRepo = new FakeBikeRepo();
+  //   rentRepo = new FakeRentRepo();
+  // });
 
   it("should correctly calculate the rent amount", async () => {
+    userRepo = new PrismaUserRepo();
+    bikeRepo = new PrismaBikeRepo();
+    rentRepo = new PrismaRentRepo();
     const app = new App(userRepo, bikeRepo, rentRepo);
     const user = new User("Jose", "jose@mail.com", "1234");
     await app.registerUser(user);
@@ -40,12 +46,13 @@ describe("App", () => {
       5,
       []
     );
-    await app.registerBike(bike);
+    const bikeId = await app.registerBike(bike);
     const clock = sinon.useFakeTimers();
-    await app.rentBike(bike.id, user.email);
+    await app.rentBike(bikeId, user.email);
     const hour = 1000 * 60 * 60;
     clock.tick(2 * hour);
-    const rentAmount = await app.returnBike(bike.id, user.email);
+    const rentAmount = await app.returnBike(bikeId, user.email);
+    await app.removeUser(user.email);
     expect(rentAmount).toEqual(200.0);
   });
 });

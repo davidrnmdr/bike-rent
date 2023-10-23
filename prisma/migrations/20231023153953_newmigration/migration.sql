@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `imgurls` MODIFY `img0` VARCHAR(255) NULL,
+    MODIFY `img1` VARCHAR(255) NULL,
+    MODIFY `img2` VARCHAR(255) NULL;

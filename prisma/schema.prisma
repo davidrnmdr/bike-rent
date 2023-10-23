@@ -36,9 +36,9 @@ model User {
 
 model ImgUrls {
   id            Int       @id @default(autoincrement())
-  img0          String    @db.VarChar(255)
-  img1          String    @db.VarChar(255)
-  img2          String    @db.VarChar(255)
+  img0          String?    @db.VarChar(255)
+  img1          String?    @db.VarChar(255)
+  img2          String?    @db.VarChar(255)
   bike          Bike?     @relation(fields: [bikeId], references: [id])
   bikeId        String    @unique @db.VarChar(255)
 }

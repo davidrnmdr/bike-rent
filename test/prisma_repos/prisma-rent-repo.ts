@@ -9,16 +9,16 @@ import { prisma } from "./prisma-client";
 export class PrismaRentRepo implements RentRepo {
   async add(rent: Rent): Promise<string> {
     const newId = crypto.randomUUID();
-    (async function () {
-      prisma.rent.create({
-        data: {
-          id: newId,
-          userId: rent.user.id,
-          bikeId: rent.bike.id,
-          startDate: rent.start,
-        },
-      });
-    })();
+
+    await prisma.rent.create({
+      data: {
+        id: newId,
+        userId: rent.user.id,
+        bikeId: rent.bike.id,
+        startDate: rent.start,
+      },
+    });
+
     return newId;
   }
 
@@ -67,7 +67,7 @@ export class PrismaRentRepo implements RentRepo {
       where: { bikeId: bikeId, userId: user.id, endDate: null },
     });
 
-    return new Rent(bike, user, rentData.startDate, rentData.id);
+    if (rentData) return new Rent(bike, user, rentData.startDate, rentData.id);
   }
 
   async findOpenByUser(userEmail: string): Promise<Rent[]> {
@@ -84,7 +84,7 @@ export class PrismaRentRepo implements RentRepo {
       where: { userId: userData.id, endDate: null },
     });
 
-    let rents;
+    let rents = [];
 
     for (const [i, rent] of rentList.entries()) {
       const bikeData = await prisma.bike.findUnique({
@@ -134,16 +134,16 @@ export class PrismaRentRepo implements RentRepo {
     const bikeRentList = await prisma.rent.findMany({
       where: { bikeId: rent.bike.id },
     });
-    (async function () {
-      prisma.rent.update({
-        where: { id: id },
-        data: {
-          id: rent.id,
-          userId: rent.user.id,
-          bikeId: rent.bike.id,
-          startDate: rent.start,
-        },
-      });
-    })();
+
+    await prisma.rent.update({
+      where: { id: id },
+      data: {
+        id: rent.id,
+        userId: rent.user.id,
+        bikeId: rent.bike.id,
+        startDate: rent.start,
+        endDate: rent.end,
+      },
+    });
   }
 }
