@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Bike {
+  id            String    @id @db.VarChar(255)
+  name          String    @db.VarChar(255)
+  type          String    @db.VarChar(255)
+  bodySize      Int
+  maxLoad       Float    
+  rate          Float
+  description   String    @db.VarChar(255)
+  ratings       Int 
+  imageUrls     ImgUrls?   
+  available     Boolean   @default(true)
+  location      Location  @relation(fields: [locationId], references: [id])
+  locationId    Int
+  rents         Rent[]       
+}
+
+model User {
+  id            String    @id @db.VarChar(255)
+  email         String    @unique
+  name          String?
+  password      String    @db.VarChar(255)
+  rents         Rent[]
+}
+
+model ImgUrls {
+  id            Int       @id @default(autoincrement())
+  img0          String    @db.VarChar(255)
+  img1          String    @db.VarChar(255)
+  img2          String    @db.VarChar(255)
+  bike          Bike?     @relation(fields: [bikeId], references: [id])
+  bikeId        String    @unique @db.VarChar(255)
+}
+  
+
+
+model Location {
+  id            Int       @id @default(autoincrement())   
+  latitude      Float     @default(0.0)
+  longitude     Float     @default(0.0)
+  bikes         Bike[]
+
+  @@unique([latitude, longitude])
+}
+
+model Rent {
+  id            String    @id
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  bikeId        String    @unique
+  bike          Bike      @relation(fields: [bikeId], references: [id])
+  startDate     DateTime
+  endDate       DateTime?
+}
+
+
