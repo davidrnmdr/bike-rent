@@ -7,28 +7,30 @@ import { prisma } from "./prisma-client";
 export class PrismaBikeRepo implements BikeRepo {
   async find(id: string): Promise<Bike> {
     const bikeData = await prisma.bike.findUnique({ where: { id: id } });
-    const locationData = await prisma.location.findUnique({
-      where: { id: bikeData.locationId },
-    });
-    const location = new Location(
-      locationData.latitude,
-      locationData.longitude
-    );
 
-    console.log(bikeData.id);
-    return new Bike(
-      bikeData.name,
-      bikeData.type,
-      bikeData.bodySize,
-      bikeData.maxLoad,
-      bikeData.rate,
-      bikeData.description,
-      bikeData.ratings,
-      [],
-      bikeData.available,
-      location,
-      bikeData.id
-    );
+    if (bikeData) {
+      const locationData = await prisma.location.findUnique({
+        where: { id: bikeData.locationId },
+      });
+      const location = new Location(
+        locationData.latitude,
+        locationData.longitude
+      );
+
+      return new Bike(
+        bikeData.name,
+        bikeData.type,
+        bikeData.bodySize,
+        bikeData.maxLoad,
+        bikeData.rate,
+        bikeData.description,
+        bikeData.ratings,
+        [],
+        bikeData.available,
+        location,
+        bikeData.id
+      );
+    }
   }
 
   async add(bike: Bike): Promise<string> {
@@ -110,7 +112,7 @@ export class PrismaBikeRepo implements BikeRepo {
         rate: bike.rate,
         description: bike.description,
         ratings: bike.ratings,
-        available: true,
+        available: bike.available,
         location: {
           connect: {
             id: location.id,
