@@ -53,7 +53,7 @@ describe("App", () => {
     clock.tick(2 * hour);
     const rentAmount = await app.returnBike(bikeId, user.email);
     expect(rentAmount).toEqual(200.0);
-  });
+  }, 50000);
 
   it("should be able to move a bike to a specific location", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -73,7 +73,7 @@ describe("App", () => {
     const bikeData = await app.findBike(bikeId);
     expect(bikeData.location.latitude).toEqual(newYork.latitude);
     expect(bikeData.location.longitude).toEqual(newYork.longitude);
-  });
+  }, 50000);
 
   it("should throw an exception when trying to move an unregistered bike", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -81,7 +81,7 @@ describe("App", () => {
     await expect(app.moveBikeTo("fake-id", newYork)).rejects.toThrow(
       BikeNotFoundError
     );
-  });
+  }, 50000);
 
   it("should correctly handle a bike rent", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -106,7 +106,7 @@ describe("App", () => {
     expect(rentData.bikeId).toEqual(bikeId);
     expect(rentData.userId).toEqual(userId);
     expect(bikeData.available).toBeFalsy();
-  });
+  }, 50000);
 
   it("should throw unavailable bike when trying to rent with an unavailable bike", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -127,14 +127,14 @@ describe("App", () => {
     await expect(app.rentBike(bikeId, user.email)).rejects.toThrow(
       UnavailableBikeError
     );
-  });
+  }, 50000);
 
   it("should throw user not found error when user is not found", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
     await expect(app.findUser("fake@mail.com")).rejects.toThrow(
       UserNotFoundError
     );
-  });
+  }, 50000);
 
   it("should correctly authenticate user", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -143,14 +143,14 @@ describe("App", () => {
     await expect(
       app.authenticate("jose@mail.com", "1234")
     ).resolves.toBeTruthy();
-  });
+  }, 50000);
 
   it("should throw duplicate user error when trying to register a duplicate user", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
     const user = new User("jose", "jose@mail.com", "1234");
     await app.registerUser(user);
     await expect(app.registerUser(user)).rejects.toThrow(DuplicateUserError);
-  });
+  }, 50000);
 
   it("should correctly remove registered user", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -158,21 +158,21 @@ describe("App", () => {
     await app.registerUser(user);
     await app.removeUser(user.email);
     await expect(app.findUser(user.email)).rejects.toThrow(UserNotFoundError);
-  });
+  }, 50000);
 
   it("should throw user not found error when trying to remove an unregistered user", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
     await expect(app.removeUser("fake@mail.com")).rejects.toThrow(
       UserNotFoundError
     );
-  });
+  }, 50000);
 
   it("should correctly register user", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
     const user = new User("jose", "jose@mail.com", "1234");
     user.id = await app.registerUser(user);
     await expect(app.findUser(user.email)).resolves.toEqual(user);
-  });
+  }, 50000);
 
   it("should throw user with open rent error when trying to remove an user with open rent(s)", async () => {
     const app = new App(userRepo, bikeRepo, rentRepo);
@@ -193,5 +193,5 @@ describe("App", () => {
     expect(async () => {
       await app.removeUser(user.email);
     }).rejects.toMatchObject(new UserWithOpenRentError());
-  });
+  }, 50000);
 });

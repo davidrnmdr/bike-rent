@@ -23,4 +23,3 @@ const bike = new Bike(
   5,
   []
 );
-app.registerBike(bike);
