@@ -25,7 +25,6 @@ let rentRepo: RentRepo = new PrismaRentRepo();
 
 describe("App", () => {
   beforeEach(async () => {
-    await prisma.imgUrls.deleteMany();
     await prisma.rent.deleteMany();
     await prisma.user.deleteMany();
     await prisma.bike.deleteMany();

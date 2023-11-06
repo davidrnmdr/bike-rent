@@ -19,7 +19,7 @@ model Bike {
   rate          Float
   description   String    @db.VarChar(255)
   ratings       Int 
-  imageUrls     ImgUrls?   
+  imageUrls     String[]  @default(["no images."]) 
   available     Boolean   @default(true)
   location      Location  @relation(fields: [locationId], references: [id])
   locationId    Int
@@ -32,15 +32,6 @@ model User {
   name          String?
   password      String    @db.VarChar(255)
   rents         Rent[]
-}
-
-model ImgUrls {
-  id            Int       @id @default(autoincrement())
-  img0          String?    @db.VarChar(255)
-  img1          String?    @db.VarChar(255)
-  img2          String?    @db.VarChar(255)
-  bike          Bike?     @relation(fields: [bikeId], references: [id])
-  bikeId        String    @unique @db.VarChar(255)
 }
   
 
@@ -62,6 +53,7 @@ model Rent {
   bike          Bike      @relation(fields: [bikeId], references: [id])
   startDate     DateTime
   endDate       DateTime?
+  
 }
 
 

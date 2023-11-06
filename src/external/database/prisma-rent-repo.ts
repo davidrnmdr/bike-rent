@@ -42,14 +42,7 @@ export class PrismaRentRepo implements RentRepo {
       locationData.longitude
     );
 
-    const imageUrlsData = await prisma.imgUrls.findUnique({
-      where: { bikeId: bikeData.id },
-    });
-    const imageUrls = [
-      imageUrlsData.img0,
-      imageUrlsData.img1,
-      imageUrlsData.img2,
-    ];
+    const imageUrlsData = bikeData.imageUrls;
     const bike = new Bike(
       bikeData.name,
       bikeData.type,
@@ -58,12 +51,12 @@ export class PrismaRentRepo implements RentRepo {
       bikeData.rate,
       bikeData.description,
       bikeData.ratings,
-      imageUrls,
+      imageUrlsData,
       bikeData.available,
       location,
       bikeData.id
     );
-    const rentData = await prisma.rent.findUnique({
+    const rentData = await prisma.rent.findFirst({
       where: { bikeId: bikeId, userId: user.id, endDate: null },
     });
 
@@ -97,14 +90,7 @@ export class PrismaRentRepo implements RentRepo {
         locationData.latitude,
         locationData.longitude
       );
-      const imageUrlsData = await prisma.imgUrls.findUnique({
-        where: { bikeId: bikeData.id },
-      });
-      const imageUrls = [
-        imageUrlsData.img0,
-        imageUrlsData.img1,
-        imageUrlsData.img2,
-      ];
+      const imageUrlsData = bikeData.imageUrls;
       const bike = new Bike(
         bikeData.name,
         bikeData.type,
@@ -113,7 +99,7 @@ export class PrismaRentRepo implements RentRepo {
         bikeData.rate,
         bikeData.description,
         bikeData.ratings,
-        imageUrls,
+        imageUrlsData,
         bikeData.available,
         location,
         bikeData.id

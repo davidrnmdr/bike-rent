@@ -63,13 +63,7 @@ export class PrismaBikeRepo implements BikeRepo {
         rate: bike.rate,
         description: bike.description,
         ratings: bike.ratings,
-        imageUrls: {
-          create: {
-            img0: bike.imageUrls[0],
-            img1: bike.imageUrls[1],
-            img2: bike.imageUrls[2],
-          },
-        },
+        imageUrls: [],
         available: true,
         location: {
           connect: {
@@ -123,7 +117,6 @@ export class PrismaBikeRepo implements BikeRepo {
   }
 
   async remove(id: string): Promise<void> {
-    await prisma.imgUrls.delete({ where: { bikeId: id } });
     await prisma.bike.delete({
       where: {
         id: id,
@@ -144,15 +137,7 @@ export class PrismaBikeRepo implements BikeRepo {
         locationData.longitude
       );
 
-      const imageUrlsData = await prisma.imgUrls.findUnique({
-        where: { bikeId: bike.id },
-      });
-      const imageUrls = [
-        imageUrlsData.img0,
-        imageUrlsData.img1,
-        imageUrlsData.img2,
-      ];
-
+      const imageUrlsData = bike.imageUrls;
       bikes[i] = new Bike(
         bike.name,
         bike.type,
@@ -161,7 +146,7 @@ export class PrismaBikeRepo implements BikeRepo {
         bike.rate,
         bike.description,
         bike.ratings,
-        imageUrls,
+        imageUrlsData,
         bike.available,
         location,
         bike.id
