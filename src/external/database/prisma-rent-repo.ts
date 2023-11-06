@@ -1,8 +1,8 @@
-import { RentRepo } from "../../src/ports/rent-repo";
-import { Rent } from "../../src/rent";
-import { User } from "../../src/user";
-import { Bike } from "../../src/bike";
-import { Location } from "../../src/location";
+import { RentRepo } from "../../ports/rent-repo";
+import { Rent } from "../../rent";
+import { User } from "../../user";
+import { Bike } from "../../bike";
+import { Location } from "../../location";
 import crypto from "crypto";
 import { prisma } from "./prisma-client";
 

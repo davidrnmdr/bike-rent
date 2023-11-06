@@ -1,7 +1,7 @@
-import { PrismaBikeRepo } from "../test/prisma_repos/prisma-bike-repo";
-import { prisma } from "../test/prisma_repos/prisma-client";
-import { PrismaRentRepo } from "../test/prisma_repos/prisma-rent-repo";
-import { PrismaUserRepo } from "../test/prisma_repos/prisma-user-repo";
+import { PrismaBikeRepo } from "./external/database/prisma-bike-repo";
+import { prisma } from "./external/database/prisma-client";
+import { PrismaRentRepo } from "./external/database/prisma-rent-repo";
+import { PrismaUserRepo } from "./external/database/prisma-user-repo";
 import { App } from "./app";
 import { Bike } from "./bike";
 import { User } from "./user";

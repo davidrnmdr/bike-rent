@@ -1,6 +1,6 @@
-import { Bike } from "../../src/bike";
-import { Location } from "../../src/location";
-import { BikeRepo } from "../../src/ports/bike-repo";
+import { Bike } from "../../bike";
+import { Location } from "../../location";
+import { BikeRepo } from "../../ports/bike-repo";
 import crypto from "crypto";
 import { prisma } from "./prisma-client";
 

@@ -14,10 +14,10 @@ import { UserRepo } from "../src/ports/user-repo";
 import { BikeRepo } from "../src/ports/bike-repo";
 import { RentRepo } from "../src/ports/rent-repo";
 import { UserWithOpenRentError } from "../src/errors/user-with-open-rent-error";
-import { PrismaUserRepo } from "./prisma_repos/prisma-user-repo";
-import { PrismaBikeRepo } from "./prisma_repos/prisma-bike-repo";
-import { PrismaRentRepo } from "./prisma_repos/prisma-rent-repo";
-import { prisma } from "../test/prisma_repos/prisma-client";
+import { PrismaUserRepo } from "../src/external/database/prisma-user-repo";
+import { PrismaBikeRepo } from "../src/external/database/prisma-bike-repo";
+import { PrismaRentRepo } from "../src/external/database/prisma-rent-repo";
+import { prisma } from "../src/external/database/prisma-client";
 
 let userRepo: UserRepo = new PrismaUserRepo();
 let bikeRepo: BikeRepo = new PrismaBikeRepo();

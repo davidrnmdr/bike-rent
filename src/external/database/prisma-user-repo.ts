@@ -1,5 +1,5 @@
-import { UserRepo } from "../../src/ports/user-repo";
-import { User } from "../../src/user";
+import { UserRepo } from "../../ports/user-repo";
+import { User } from "../../user";
 import crypto from "crypto";
 import { prisma } from "./prisma-client";
 
