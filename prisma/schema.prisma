@@ -10,50 +10,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Bike {
-  id            String    @id @db.VarChar(255)
-  name          String    @db.VarChar(255)
-  type          String    @db.VarChar(255)
-  bodySize      Int
-  maxLoad       Float    
-  rate          Float
-  description   String    @db.VarChar(255)
-  ratings       Int 
-  imageUrls     String[]  @default(["no images."]) 
-  available     Boolean   @default(true)
-  location      Location  @relation(fields: [locationId], references: [id])
-  locationId    Int
-  rents         Rent[]       
-}
-
 model User {
-  id            String    @id @db.VarChar(255)
-  email         String    @unique
-  name          String?
-  password      String    @db.VarChar(255)
-  rents         Rent[]
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  rents    Rent[]
 }
-  
 
+model Bike {
+  id          String     @id @default(uuid())
+  name        String
+  type        String
+  bodySize    Int
+  maxLoad     Int
+  rate        Float
+  description String
+  ratings     Int
+  available   Boolean
+  latitude    Float
+  longitude   Float
+  imageUrls   ImageUrl[]
+  rents       Rent[]
+}
 
-model Location {
-  id            Int       @id @default(autoincrement())   
-  latitude      Float     @default(0.0)
-  longitude     Float     @default(0.0)
-  bikes         Bike[]
-
-  @@unique([latitude, longitude])
+model ImageUrl {
+  id     String @id @default(uuid())
+  url    String
+  bike   Bike   @relation(fields: [bikeId], references: [id], onDelete: Cascade)
+  bikeId String
 }
 
 model Rent {
-  id            String    @id
-  userId        String    @unique
-  user          User      @relation(fields: [userId], references: [id])
-  bikeId        String    @unique
-  bike          Bike      @relation(fields: [bikeId], references: [id])
-  startDate     DateTime
-  endDate       DateTime?
-  
+  id     String @id @default(uuid())
+  bike   Bike   @relation(fields: [bikeId], references: [id], onDelete: Cascade)
+  bikeId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  start  DateTime
+  end    DateTime?
 }
-
-

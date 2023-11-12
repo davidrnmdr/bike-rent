@@ -1,7 +1,7 @@
 export class DuplicateUserError extends Error {
-  public readonly name = "DuplicateUserError";
+    public readonly name = 'DuplicateUserError'
 
-  constructor() {
-    super("Duplicate user.");
-  }
+    constructor() {
+        super('Duplicate user.')
+    }
 }
